@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-app
+spec:
+  containers:
+    - name: demo
+      image: cr-cn-guilin-boe.volces.com/vke/python:3.7
+      volumeMounts:
+        - mountPath: /data
+          name: demo
+      command:
+        - sh
+        - -c
+        - while true;do sleep 1; done
+  volumes:
+    - name: demo
+      persistentVolumeClaim:
+        claimName: demo

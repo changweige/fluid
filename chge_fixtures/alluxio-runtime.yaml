@@ -1,0 +1,20 @@
+apiVersion: data.fluid.io/v1alpha1
+kind: AlluxioRuntime
+metadata:
+  name: demo
+spec:
+  replicas: 1
+  master:
+    nodeSelector:
+      kubernetes.io/os: linux
+  tieredstore:
+    levels:
+      - mediumtype: MEM
+        path: /dev/shm
+        quota: 1Gi
+        high: "0.9"
+        low: "0.85"
+  properties:
+    alluxio.user.file.writetype.default: CACHE_THROUGH
+    alluxio.user.ufs.block.read.location.policy.deterministic.hash.shards: "1"
+    alluxio.user.ufs.block.read.location.policy: alluxio.client.block.policy.DeterministicHashPolicy

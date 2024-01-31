@@ -1,0 +1,15 @@
+apiVersion: data.fluid.io/v1alpha1
+kind: Dataset
+metadata:
+  name: demo
+spec:
+  mounts:
+    - mountPoint: s3://nydus
+      options:
+        aws.accessKeyId: AKLTZDkwYWJiMjBhM2ZkNDQ3ODgyNGNkZGQwMjhhN2M3YzQ
+        aws.secretKey: WVdWak5EWTFZbU00TkdabU5HWmlOVGswTmpSaVlXVTJOVGt4WlRSa05USQ==
+        alluxio.underfs.s3.endpoint: tos-s3-cn-boe.volces.com
+      name: nydus-fluid
+  accessModes:
+    - ReadWriteMany
+  placement: "Shared"
