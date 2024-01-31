@@ -1,0 +1,174 @@
+crdUpgrade:
+  enabled: true
+  image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/fluid-crd-upgrader:v1.0.0-d4c82f1
+  ttlSecondsAfterFinished: 259200
+csi:
+  config:
+    hostNetwork: false
+  featureGates: FuseRecovery=false
+  kubelet:
+    certDir: /var/lib/kubelet/pki
+    kubeConfigFile: /etc/kubernetes/kubelet.conf
+    rootDir: /var/lib/kubelet
+  nodePublishMethod: bindMount
+  plugins:
+    image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/fluid-csi:v1.0.0-d4c82f1
+  pruneFs: fuse.alluxio-fuse,fuse.jindofs-fuse,fuse.juicefs,fuse.goosefs-fuse,ossfs,alifuse.aliyun-alinas-efc
+  recoverWarningThreshold: 50
+  registrar:
+    image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/csi-node-driver-registrar:v2.3.0
+  tolerations:
+  - operator: Exists
+dataset:
+  controller:
+    image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/dataset-controller:v1.0.0-d4c82f1
+  replicas: 1
+  tolerations:
+  - operator: Exists
+fluidapp:
+  controller:
+    image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/application-controller:v1.0.0-d4c82f1
+  enabled: true
+  replicas: 1
+  tolerations:
+  - operator: Exists
+helmDriver: configmap
+image:
+  imagePullSecrets: []
+namespace: fluid-system
+runtime:
+  alluxio:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/alluxioruntime-controller:v1.0.0-d4c82f1
+    enabled: false
+    fuse:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/alluxio-dev:2.9.0
+    init:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/init-users:v0.9.0
+    mountConfigStorage: configmap
+    portAllocatePolicy: random
+    portRange: 20000-26000
+    replicas: 1
+    runtime:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/alluxio-dev:2.9.0
+    runtimeWorkers: 3
+    tolerations:
+    - operator: Exists
+  criticalFusePod: true
+  efc:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/efcruntime-controller:v1.0.0-d4c82f1
+      imagePullPolicy: Always
+    enabled: false
+    fuse:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/efc-fuse:v1.2.2-19dcee9
+    init:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/init-alifuse:v1.2.2-19dcee9
+    master:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/efc-master:v1.2.2-19dcee9
+    replicas: 1
+    tolerations:
+    - operator: Exists
+    worker:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/efc-worker:v1.2.2-19dcee9
+  goosefs:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/goosefsruntime-controller:v1.0.0-d4c82f1
+    enabled: false
+    fuse:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/goosefs-fuse:v1.2.0
+    init:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/init-users:v0.9.0
+    portAllocatePolicy: random
+    portRange: 26000-32000
+    replicas: 1
+    runtime:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/goosefs:v1.2.0
+    runtimeWorkers: 3
+    tolerations:
+    - operator: Exists
+  jindo:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/jindoruntime-controller:v1.0.0-d4c82f1
+    enabled: false
+    engine: jindocache
+    fuse:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/jindo-fuse:6.2.0
+    init:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/init-users:v0.9.0
+      portCheck:
+        enabled: false
+    portAllocatePolicy: random
+    portRange: 18000-19999
+    queryUfsTotal: true
+    replicas: 1
+    runtimeWorkers: 3
+    smartdata:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/smartdata:6.2.0
+    tolerations:
+    - operator: Exists
+  juicefs:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/juicefsruntime-controller:v1.0.0-d4c82f1
+    enabled: false
+    fuse:
+      ceimage: juicedata/juicefs-fuse:ce-v1.1.0-rc1
+      eeimage: juicedata/juicefs-fuse:ee-4.9.16
+    replicas: 1
+    runtimeWorkers: 3
+    tolerations:
+    - operator: Exists
+  mountRoot: /runtime-mnt
+  syncRetryDuration: 15s
+  thin:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/thinruntime-controller:v1.0.0-d4c82f1
+    enabled: false
+    fuse:
+      configStorage: configmap
+    replicas: 1
+    tolerations:
+    - operator: Exists
+  vineyard:
+    controller:
+      image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/vineyardruntime-controller:v1.0.0-d4c82f1
+      imagePullPolicy: Always
+    enabled: false
+    replicas: 1
+    tolerations:
+    - operator: Exists
+webhook:
+  enabled: true
+  forceReplacePluginsProfile: false
+  image: helm-cr-cn-guilin-boe.cr.volces.com/nydus/fluid-webhook:v1.0.0-d4c82f1
+  pluginsProfile:
+    pluginConfig:
+    - args: "preferred:\n  # fluid.io/fuse is a fluid built-in affinity, prefer to\
+        \ schedule pods to nodes with runtime fuse pods.\n  # - name: fluid.io/fuse\n\
+        \  #   weight: 100\n  # fluid.io/node is a fluid built-in affinity, prefer\
+        \ to schedule pods to nodes with runtime worker pods.\n  - name: fluid.io/node\n\
+        \    weight: 100\n  # runtime worker's zone label name, can be changed according\
+        \ to k8s environment.\n  - name: topology.kubernetes.io/zone\n    weight:\
+        \ 50\n  # runtime worker's region label name, can be changed according to\
+        \ k8s environment.\n  - name: topology.kubernetes.io/region\n    weight: 20\n\
+        # used when app pod with label fluid.io/dataset.{dataset name}.sched set true\n\
+        required:\n  - fluid.io/node\n"
+      name: NodeAffinityWithCache
+    plugins:
+      serverful:
+        withDataset:
+        - RequireNodeWithFuse
+        - NodeAffinityWithCache
+        - MountPropagationInjector
+        withoutDataset:
+        - PreferNodesWithoutCache
+      serverless:
+        withDataset:
+        - FuseSidecar
+        withoutDataset: []
+  reinvocationPolicy: IfNeeded
+  replicas: 1
+  timeoutSeconds: 15
+  tolerations:
+  - operator: Exists
+workdir: /tmp
